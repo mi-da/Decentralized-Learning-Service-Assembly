@@ -2,7 +2,7 @@
 This page contains the simulation code to replicate the results of the paper: Emergent Assembly
 
 ### Instructions
-1. Download the Java Project "Emergent Assembly" and import it in your IDE
+1. Download the Java Project "Decentralized-Learning-Service-Assembly" and import it in your IDE
 2. Link the provided libraries in "ext-lib" to the project
 3. Input the program argument "configs/mida-assembly-config.txt" (i.e., the configuration file of PeerSim)
 4. The main class to run the experiments is "peersim.Simulator"
