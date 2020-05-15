@@ -1,5 +1,5 @@
 # Decentralized Learning for Self-Adaptive QoS-Aware and Energy-Aware Service Assembly
-This page contains the simulation code to replicate the results of the paper: Emergent Assembly
+This repository contains the simulation code to replicate the results of the experimantation.
 
 ### Instructions
 1. Download the Java Project "Decentralized-Learning-Service-Assembly" and import it in your IDE as a Java project
