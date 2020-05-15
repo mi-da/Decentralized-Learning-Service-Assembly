@@ -13,10 +13,10 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
 - TYPES: Number of types of services
 - M: learning window of the proposed algorithm
 - STRATEGY: The selection criteria that the nodes adopt. We implemented multiple strategies:
-  1. emergent (QoS-aware - see [1])
+  1. emergent (QoS-aware with learning - see [1])
   2. random 
   3. greedy (Greedy on QoS)
-  4. shaerf (QoS-aware - see [2])
+  4. shaerf (QoS-aware with learning - see [2])
   5. individual_energy (Energy-aware greedy - paper under revision at ECSA2020)
   6. overall_energy (Energy-aware greedy - paper under revision at ECSA2020)
   7. fair_energy (Energy-aware with learning - paper under revision at ECSA2020)
@@ -24,6 +24,7 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
 ### References 
  
 [1] M. D’Angelo, M. Caporuscio, V. Grassi, and R. Mirandola, ‘Decentralized learning for self-adaptive QoS-aware service assembly’, Future generations computer systems, vol. 108, pp. 210–227, 2020. https://doi.org/10.1016/j.future.2020.02.027.
+[2] A. Schaerf, Y. Shoham, and M. Tennenholtz. 1995. Adaptive load balancing: a study in multi-agent learning. J. Artif. Int. Res. 2, 1 (August 1994), 475–500.
 
 
 ### Contact 
