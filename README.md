@@ -13,7 +13,7 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
 - TYPES: Number of types of services
 - M: learning window of the proposed algorithm
 - STRATEGY: The algorithm that the simulation run. We implemented 4 strategies: 1) emergent, 2) random, 3) greedy, 4) shaerf. The first strategy is the one proposed in this work.
-###### asda
+  - asd
 
 ### Contact 
 If you have additional questions do not hesitate to contact me: https://lnu.se/en/staff/mirko.dangelo/
