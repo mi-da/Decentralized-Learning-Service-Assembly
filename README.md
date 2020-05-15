@@ -23,7 +23,8 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
   
 ### References 
  
-[1] M. D’Angelo, M. Caporuscio, V. Grassi, and R. Mirandola, ‘Decentralized learning for self-adaptive QoS-aware service assembly’, Future generations computer systems, vol. 108, pp. 210–227, 2020.
+[1] M. D’Angelo, M. Caporuscio, V. Grassi, and R. Mirandola, ‘Decentralized learning for self-adaptive QoS-aware service assembly’, Future generations computer systems, vol. 108, pp. 210–227, 2020. https://doi.org/10.1016/j.future.2020.02.027.
+
 
 ### Contact 
 If you have additional questions do not hesitate to contact me: https://lnu.se/en/staff/mirko.dangelo/
