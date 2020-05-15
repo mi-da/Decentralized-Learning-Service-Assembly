@@ -18,6 +18,7 @@
 
 package lnu.mida.controller;
 
+import lnu.mida.protocol.OverloadApplication;
 import lnu.mida.protocol.OverloadComponentAssembly;
 import peersim.config.*;
 import peersim.core.*;
@@ -78,13 +79,14 @@ public class OverloadReset implements Control {
 
 	@Override
 	public boolean execute() {
-		
-		
+				
 		// reset the dependencies for the new round of composition
 		for (int i = 0; i < Network.size(); i++) {		
-			OverloadComponentAssembly n = (OverloadComponentAssembly) Network.get(i).getProtocol(component_assembly_pid);			
+			OverloadComponentAssembly ca = (OverloadComponentAssembly) Network.get(i).getProtocol(component_assembly_pid);		
+			OverloadApplication appl = (OverloadApplication)  Network.get(i).getProtocol(application_pid);	
 			// reset the node
-			n.reset();	
+			ca.reset();	
+//			appl.reset();
 		}
 		
 		return false;

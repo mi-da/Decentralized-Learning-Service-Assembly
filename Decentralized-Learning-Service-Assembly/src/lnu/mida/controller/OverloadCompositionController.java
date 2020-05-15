@@ -83,12 +83,11 @@ public class OverloadCompositionController implements Control {
 	@Override
 	public boolean execute() {
 		
-		// non calcolo al round 0 (nessu bind)
+		// non calcolo al round 0 (nessun bind)
 		if (CommonState.getIntTime() == 0)
 			return false;
 
-		// get from every node the real utility experienced
-
+		// get from every node the real quality experienced
 		int notResolved = 0;
 
 		for (int i = 0; i < Network.size(); i++) {
@@ -100,11 +99,11 @@ public class OverloadCompositionController implements Control {
 			GeneralNode node = (GeneralNode) Network.get(i);
 			OverloadComponentAssembly ca = (OverloadComponentAssembly) node.getProtocol(component_assembly_pid);
 			OverloadApplication appl = (OverloadApplication) node.getProtocol(application_pid);
+	
 
 			double experiencedCU = 1;
 
 			if (!ca.isFullyResolved()) {
-
 				experiencedCU = 0;
 				notResolved++;
 			} else {
@@ -118,14 +117,26 @@ public class OverloadCompositionController implements Control {
 					if (dep == true) {
 
 						OverloadComponentAssembly depObj = listDepObj[j];
+						
+						// should not happen
+						if(ca.getType()==depObj.getType()) {
+							System.err.println("Cannot have dependency on same type: OverloadComponentAssembly");
+							System.exit(0);
+						}
 
 						// updates lambda
-						if(depObj.getLambda_t()==0)
-							depObj.updateLambdaTot();
+ 						//if(depObj.getLambda_t()==0)
+						depObj.updateLambdaTot();
 
 						double experienced_utility = depObj.getRealUtility(ca);
 
-						appl.addHistoryExperience(depObj, experienced_utility, depObj.getDeclaredUtility());
+						appl.addQoSHistoryExperience(depObj, experienced_utility, depObj.getDeclaredUtility());
+						
+						
+						GeneralNode depNode = GeneralNode.getNode(depObj.getId());
+						
+						// added individual energy lambda
+						appl.addEnergyHistoryExperience(depObj, depNode.getI_comp_lambda()+depNode.getI_comm_lambda());
 
 						experiencedCU = experiencedCU * experienced_utility; // Experienced Compound Utility (multiplication of all dependencies)				
 					}
@@ -135,6 +146,18 @@ public class OverloadCompositionController implements Control {
 			ca.setExperiencedCU(experiencedCU);
 
 		}
+		
+		// set new declared utilities
+//		for (int i = 0; i < Network.size(); i++) {
+//
+//			if (!Network.get(i).isUp()) {
+//				continue;
+//			}
+//			GeneralNode node = (GeneralNode) Network.get(i);
+//			OverloadComponentAssembly ca = (OverloadComponentAssembly) node.getProtocol(component_assembly_pid);
+//			ca.setDeclared_utility(ca.getUtilityFromLambda());
+//		}
+	
 
 		return false;
 	}

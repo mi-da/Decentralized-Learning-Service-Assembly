@@ -24,11 +24,14 @@ public class FinalUtilityObserver implements Control {
 	 */
 	private final String name;
 
-	public static ArrayList<IncrementalStats> finalUtils;
+	// Quality
+	public static ArrayList<IncrementalStats> quality;	
+	public static ArrayList<IncrementalStats> quality_jain;
 	
-	public static ArrayList<IncrementalStats> finalUtils_std;
 	
-	public static ArrayList<IncrementalStats> finalUtils_jain;
+	// Energy	
+	public static ArrayList<IncrementalStats> energy;
+	public static ArrayList<IncrementalStats> energy_jain;
 
 	// ///////////////////////////////////////////////////////////////////////
 	// Constructor
@@ -61,17 +64,28 @@ public class FinalUtilityObserver implements Control {
 			PrintStream ps = OverloadFileInitializer.getPs_final();
 			
 			int n = 1;
-			for (IncrementalStats incrementalStats : finalUtils.subList( 1, finalUtils.size() ) ) {
-								
-				double globalU = incrementalStats.getAverage();
+			for (IncrementalStats incrementalStats : quality.subList(1, quality.size() ) ) {
+					
+				int index = quality.indexOf(incrementalStats);
 				
-				IncrementalStats is_jain = finalUtils_jain.get(finalUtils.indexOf(incrementalStats));
+				// Quality
+				double finalQuality = incrementalStats.getAverage();
+				IncrementalStats quality_jain_is = quality_jain.get(index);		
+				double finalQualityFairness = quality_jain_is.getAverage();
 				
-				double jain = is_jain.getAverage();
-			
+				// Energy
+				IncrementalStats energy_is = energy.get(index);	
+				IncrementalStats energy_jain_is = energy_jain.get(index);	
+				
+				double finalEnergy = energy_is.getAverage();
+				double finalEnergyFairness = energy_jain_is.getAverage();
+
+				
 				ps.print(n+" ");
-				ps.print(globalU+" ");
-				ps.println(jain);
+				ps.print(finalQuality+" ");
+				ps.print(finalQualityFairness+" ");
+				ps.print(finalEnergy+" ");
+				ps.print(finalEnergyFairness+"\n");
 				
 				n+=1; // learning step
 			}						
