@@ -13,13 +13,13 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
 - TYPES: Number of types of services
 - M: learning window of the proposed algorithm
 - STRATEGY: The selection criteria that the nodes adopt. We implemented multiple strategies:
-  1. emergent [1]
-  2. random
-  3. greedy
-  4. shaerf
-  5. individual_energy
-  6. overall_energy
-  7. fair_energy
+  1. emergent (QoS-aware - see [1])
+  2. random 
+  3. greedy (Greedy on QoS)
+  4. shaerf (QoS-aware - see [2])
+  5. individual_energy (Energy-aware greedy - paper under revision at ECSA2020)
+  6. overall_energy (Energy-aware greedy - paper under revision at ECSA2020)
+  7. fair_energy (Energy-aware with learning - paper under revision at ECSA2020)
   
 ### References 
  
