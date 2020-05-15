@@ -12,9 +12,18 @@ The file configs/mida-assembly-config.txt contains the configurations parameter 
 - NETWORK_SIZE: The number of services to assemble (note that for the provided local quality functions the system starts saturating aroung 1000 nodes)
 - TYPES: Number of types of services
 - M: learning window of the proposed algorithm
-- STRATEGY: The algorithm that the simulation run. We implemented 4 strategies: 1) emergent, 2) random, 3) greedy, 4) shaerf. The first strategy is the one proposed in this work.
-  1. asd
-  2.
+- STRATEGY: The selection criteria that the nodes adopt. We implemented multiple strategies:
+  1. emergent [1]
+  2. random
+  3. greedy
+  4. shaerf
+  5. individual_energy
+  6. overall_energy
+  7. fair_energy
+  
+### References 
+ 
+[1] M. D’Angelo, M. Caporuscio, V. Grassi, and R. Mirandola, ‘Decentralized learning for self-adaptive QoS-aware service assembly’, Future generations computer systems, vol. 108, pp. 210–227, 2020.
 
 ### Contact 
 If you have additional questions do not hesitate to contact me: https://lnu.se/en/staff/mirko.dangelo/
