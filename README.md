@@ -9,7 +9,7 @@ This repository contains the simulation code to replicate the results of the exp
 
 ### Configuration Parameters
 The file configs/mida-assembly-config.txt contains the configuration parameters for the simulation. The main parameters are:
-- NETWORK_SIZE: The number of services to assemble (note that for the provided local quality functions the system starts saturating aroung 1000 nodes)
+- NETWORK_SIZE: The number of services to assemble
 - TYPES: Number of types of services
 - M: learning window of the proposed algorithm
 - STRATEGY: The selection criteria that the nodes adopt. We implemented multiple strategies:
