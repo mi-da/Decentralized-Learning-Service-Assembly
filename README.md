@@ -1,4 +1,4 @@
-# Decentralized Learning for Self-Adaptive QoS-Aware Service Assembly
+# Decentralized Learning for Self-Adaptive QoS-Aware and Energy-Aware Service Assembly
 This page contains the simulation code to replicate the results of the paper: Emergent Assembly
 
 ### Instructions
