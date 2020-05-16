@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import lnu.mida.entity.GeneralNode;
-import lnu.mida.entityl.transferfunction.TransferFunction;
-import lnu.mida.entityl.transferfunction.UnityTransferFunction;
+import lnu.mida.entity.TransferFunction;
+import lnu.mida.entity.UnityTransferFunction;
 
 import java.util.Iterator;
 
@@ -20,7 +20,7 @@ import java.util.Iterator;
  * component. In this model a component may have at most one dependency for each
  * type t. Note that dependency loops are not handled; therefore, it is
  * essential that there are no loops in the dependency structure. To avoid loops
- * a component of type i can only have dependencies of type >i
+ * a component of type i can only have dependencies of type j&gt;i
  */
 public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 
@@ -71,16 +71,7 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	/** dependencies[i] is true iff there is a dependency of type i */
 	private OverloadComponentAssembly dependencies_obj[];
 
-	/** is the average rate of service requests sent to dependency d 
-	 *  by a non-terminal service S when S is subject to an incoming
-	 *  load vector  of service requests.  */
-	private TransferFunction transfer_func_S[];
-	
-	/** is the average rate of service requests sent to CPU
-	 *  by service S when S is subject to an incoming
-	 *  load vector  of service requests
-	 */
-	private TransferFunction transfer_func_CPU;
+	private TransferFunction transfer_func[];
 
 	/** if the i-th dependency is resolved, then dependencies_obj[i] is a reference to the node which satisfies it. If the i-th dependency is not resolved, then dependencies_obj[i] is null*/
 
@@ -117,10 +108,8 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	// rate of service requests addressed to $S$ from external users;
 	private double sigma;
 
-	// overall load addressed to S;
+	// overall load addressed to S: ;
 	private double lambda_t;
-	
-	
 
 	/**
 	 * Initialize this object by reading configuration parameters.
@@ -153,8 +142,12 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 		sigma = 0;
 		lambda_t = 0;
 		setExperiencedCU(0);
-		
-		transfer_func_S = new TransferFunction[max_types];		
+
+		// setup transfer functions
+		transfer_func = new TransferFunction[max_types];
+		for (int i = 0; i < max_types; i++) {
+			transfer_func[i] = new UnityTransferFunction();
+		}
 	}
 
 	/**
@@ -308,7 +301,7 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	}
 	
 	/*
-	 * This function calculates the real utility experienced by a node
+	 * This function calculate the real utility experienced by a node
 	 */
 	public double getRealUtility(OverloadComponentAssembly o) {
 		assert (this != o);
@@ -330,13 +323,10 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 
 		double returned_util = 0;
 
-		if (lambda_t < (200 * queueParameter))
+		if (lambda_t < (70 * queueParameter))
 			returned_util = declared_utility;
-		else  {
+		else
 			returned_util = Math.pow(Math.E, -(lambda_t*lambda_t) / (10000 * curveParameter));
-//			if(returned_util>0.7)
-//				System.out.println(returned_util);
-		}
 
 		return returned_util;
 	}
@@ -454,7 +444,7 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	/**
 	 * Updates the compound utility of this component. If this component is not
 	 * fully resolved, the compound utility is set to zero. If it is fully
-	 * resolved, the compound utility is set as the product of the utility of
+	 * resolved, the compound utility is set as the product(or sum?) of the utility of
 	 * this single component and the compound utility of all dependencies. If
 	 * the updated value of the compound utility for this component is different
 	 * than the previous value, this method invokes setChanged(). In general,
@@ -506,97 +496,6 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 		}
 		return effective_compound_utility;
 	}
-	
-	
-	// recursively calculate overall CPU energy
-	public double calculateOverallCPUEnergy() {
-		
-		    GeneralNode thisNode = GeneralNode.getNode(this.id);
-			double overallEnergy = thisNode.getI_comp();
-
-			is_fully_resolved = true;
-			for (int t = 0; t < dependencies_obj.length; ++t) {
-				if (dependencies[t] == false)
-					continue; // skip to next item
-
-				if (dependencies_obj[t] == null || dependencies_obj[t].isFailed()) {
-					overallEnergy = 0.0;
-					is_fully_resolved = false;
-					dependencies_obj[t] = null;
-					break;
-				}
-				overallEnergy += dependencies_obj[t].calculateOverallCPUEnergy();
-			}
-			return overallEnergy;
-	}
-	
-	
-	// recursively calculate overall CPU energy (lambda)
-	public double calculateOverallCPUEnergyLambda() {
-		
-		    GeneralNode thisNode = GeneralNode.getNode(this.id);
-			double overallEnergy = thisNode.getI_comp_lambda();
-
-			is_fully_resolved = true;
-			for (int t = 0; t < dependencies_obj.length; ++t) {
-				if (dependencies[t] == false)
-					continue; // skip to next item
-
-				if (dependencies_obj[t] == null || dependencies_obj[t].isFailed()) {
-					overallEnergy = 0.0;
-					is_fully_resolved = false;
-					dependencies_obj[t] = null;
-					break;
-				}
-				overallEnergy += dependencies_obj[t].calculateOverallCPUEnergyLambda();
-			}
-			return overallEnergy;
-	}
-	
-	
-	// recursively calculate overall communication energy
-	public double calculateOverallCommunicationEnergy() {
-		
-		    GeneralNode thisNode = GeneralNode.getNode(this.id);
-			double overallEnergy = thisNode.getI_comm();
-
-			is_fully_resolved = true;
-			for (int t = 0; t < dependencies_obj.length; ++t) {
-				if (dependencies[t] == false)
-					continue; // skip to next item
-
-				if (dependencies_obj[t] == null || dependencies_obj[t].isFailed()) {
-					overallEnergy = 0.0;
-					is_fully_resolved = false;
-					dependencies_obj[t] = null;
-					break;
-				}
-				overallEnergy += dependencies_obj[t].calculateOverallCommunicationEnergy();
-			}
-			return overallEnergy;
-	}
-	
-	// recursively calculate overall communication energy (lambda)
-	public double calculateOverallCommunicationEnergyLambda() {
-		
-		    GeneralNode thisNode = GeneralNode.getNode(this.id);
-			double overallEnergy = thisNode.getI_comm_lambda();
-
-			is_fully_resolved = true;
-			for (int t = 0; t < dependencies_obj.length; ++t) {
-				if (dependencies[t] == false)
-					continue; // skip to next item
-
-				if (dependencies_obj[t] == null || dependencies_obj[t].isFailed()) {
-					overallEnergy = 0.0;
-					is_fully_resolved = false;
-					dependencies_obj[t] = null;
-					break;
-				}
-				overallEnergy += dependencies_obj[t].calculateOverallCommunicationEnergyLambda();
-			}
-			return overallEnergy;
-	}
 
 	// recursively calculate lambda tot
 	public double updateLambdaTot() {
@@ -604,6 +503,7 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 		for (Object o : this.observers) {
 
 			OverloadComponentAssembly ca = (OverloadComponentAssembly) o;
+
 			lambda_tot += ca.transferLoad(this);
 
 		}
@@ -614,11 +514,12 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	}
 
 	private double transferLoad(OverloadComponentAssembly overloadComponentAssembly) {
+
 		for (int i = 0; i < max_types; i++) {
 			OverloadComponentAssembly depObj = dependencies_obj[i];
 
 			if (depObj != null && overloadComponentAssembly.equals(depObj)) {
-				return transfer_func_S[i].calculate_tSd(lambda_t);
+				return transfer_func[i].calculate_tSd();
 			}
 		}
 		return 0;
@@ -801,22 +702,5 @@ public class OverloadComponentAssembly implements CDProtocol, Cleanable {
 	public void setDeclared_utility(double declared_utility) {
 		this.declared_utility = declared_utility;
 	}
-	
-	public TransferFunction[] getTransferFunctions() {
-		return transfer_func_S;
-	}
-
-	public TransferFunction getTransfer_func_CPU() {
-		return transfer_func_CPU;
-	}
-
-	public void setTransfer_func_CPU(TransferFunction transfer_func_CPU) {
-		this.transfer_func_CPU = transfer_func_CPU;
-	}
-	
-	public double getLambdatoCPU() {
-		return transfer_func_CPU.calculate_tSd(lambda_t);
-	}
-
 
 }

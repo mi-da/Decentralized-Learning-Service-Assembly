@@ -1,7 +1,5 @@
 package lnu.mida.entity;
 
-import com.lajv.location.Location;
-
 import peersim.config.*;
 import peersim.core.Cleanable;
 import peersim.core.CommonState;
@@ -19,9 +17,6 @@ public class GeneralNode implements Node {
 
 // ================= fields ========================================
 // =================================================================
-
-public Location location;
-	
 
 /** used to generate unique IDs */
 public static long counterID = -1;
@@ -50,46 +45,7 @@ protected int failstate = Fallible.OK;
 */
 private long ID;
 
-
-/** 
- * Energy related parameters
- */
-
-// green energy generation rate of the node
-private double G;
-
-/** Sigle request cost I,E **/
-private double I_comp;
-
-private double E_comp;
-
-private double I_comm;
-
-private double E_comm;
-
-
-/** Lambda dependent I,E **/
-
-// individual computation energy consumption of S (dependent of lambda)
-private double I_comp_lambda;
-
-// overall computation energy consumption associated with a service S (must be recursively calculated, dependent of lambda)
-private double E_comp_lambda;
-
-// individual communication energy consumption of S (calculated as receiving cost and sending cost, dependet on lambda)
-private double I_comm_lambda;
-
-// overall communication energy consumption associated with a service S (must be recursively calculated)
-private double E_comm_lambda;
-
-
-
-// Receiving costs 1 unit of energy = Eelect
-private double Eelect = 0.02;
-// Sending a message costs on average 2 times of Eelect: this leads to the definition of Eamp (average distance is 90 meters)
-private double Eamp  = Eelect/Math.pow(90, 2);
-// The cost of a CPU operation is equal to the maximum cost of sending a message
-private double CPUCost= 0.04;
+private boolean is_server;
 
 // ================ constructor and initialization =================
 // =================================================================
@@ -101,22 +57,8 @@ private double CPUCost= 0.04;
 * the configuration.
 */
 public GeneralNode(String prefix) {
-	location = (Location) Configuration.getInstance(prefix + "." + "loc_impl");
+	
 	String[] names = Configuration.getNames(PAR_PROT);
-	
-	// in theory this is known in advance
-	setI_comp(0);
-	
-	setE_comp(0);
-	setI_comm(0);
-	setE_comm(0);
-	
-	
-	setI_comp_lambda(0);
-	setE_comp_lambda(0);
-	setI_comm_lambda(0);
-	setE_comm_lambda(0);
-	
 	CommonState.setNode(this);
 	ID=nextID();
 	protocol = new Protocol[names.length];
@@ -144,7 +86,6 @@ public Object clone() {
 		CommonState.setPid(i);
 		result.protocol[i] = (Protocol)protocol[i].clone();
 	}
-	result.location = (Location) location.clone();
 	return result;
 }
 
@@ -186,10 +127,6 @@ public void setFailState(int failState) {
 			throw new IllegalArgumentException(
 				"failState="+failState);
 	}
-}
-
-public Location getLocation() {
-	return location;
 }
 
 // -----------------------------------------------------------------
@@ -252,6 +189,10 @@ public String toString()
 public int hashCode() { return (int)getID(); }
 
 
+public boolean getIs_server() {
+	return is_server;
+}
+
 public static GeneralNode getNode(long id) {
 	for (int i = 0; i < Network.size(); i++) {
 		GeneralNode n = (GeneralNode) Network.get(i);
@@ -265,124 +206,6 @@ public static GeneralNode getNode(long id) {
 	}
 	System.exit(0);
 	return null;
-}
-
-public double getG() {
-	return G;
-}
-
-
-public void setG(double g) {
-	G = g;
-}
-
-
-public double getI_comp_lambda() {
-	return I_comp_lambda;
-}
-
-
-public void setI_comp_lambda(double i_comp) {
-	I_comp_lambda = i_comp;
-}
-
-
-public double getE_comp_lambda() {
-	return E_comp_lambda;
-}
-
-
-public void setE_comp_lambda(double e_comp) {
-	E_comp_lambda = e_comp;
-}
-
-
-public double getI_comm_lambda() {
-	return I_comm_lambda;
-}
-
-
-public void setI_comm_lambda(double i_comm) {
-	I_comm_lambda = i_comm;
-}
-
-
-public double getE_comm_lambda() {
-	return E_comm_lambda;
-}
-
-
-public void setE_comm_lambda(double e_comm) {
-	E_comm_lambda = e_comm;
-}
-
-// returns individual CPU energy consumption
-public double getConsumedIndividualCPUEnergy(double lambda_CPU) {
-	
-//	System.out.println("node "+this.getID()+" lambda cpu "+lambda_CPU);
-	return lambda_CPU*CPUCost;			
-}
-
-// retursn consumed individual communication energy consumption for sending
-public double getConsumedIndividualCommEnergySending(double lambda, double latency) {
-	// Sending energy =  K(E_{elect} + E_{amp} l_{S,S'}^2)
-	double sendingEnergy = lambda*(Eelect+(Eamp*Math.pow(latency,2)));
-	
-//	System.out.println("latency "+latency);
-//	System.out.println("sending energy "+sendingEnergy);
-	
-	return sendingEnergy;	
-}
-
-// returns consumed individual communication energy consumption for receiving
-public double  getConsumedIndividualCommEnergyReceiving(double lambda) {
-	// Receiving energy = K(E_{elect})
-	double receivingEnergy = lambda*Eelect;
-	
-//	System.out.println("lambda "+lambda);
-//	System.out.println("receiving energy "+receivingEnergy);
-
-	return receivingEnergy;	
-}
-
-
-public double getI_comp() {
-	return I_comp;
-}
-
-
-public void setI_comp(double i_comp) {
-	I_comp = i_comp;
-}
-
-
-public double getE_comp() {
-	return E_comp;
-}
-
-
-public void setE_comp(double e_comp) {
-	E_comp = e_comp;
-}
-
-
-public double getI_comm() {
-	return I_comm;
-}
-
-
-public void setI_comm(double i_comm) {
-	I_comm = i_comm;
-}
-
-
-public double getE_comm() {
-	return E_comm;
-}
-
-
-public void setE_comm(double e_comm) {
-	E_comm = e_comm;
 }
 
 }

@@ -57,10 +57,11 @@ public class ProbDependencyInitializer implements Control {
 	// Initialization
 	// ------------------------------------------------------------------------
 	/**
-	 * Standard constructor that reads the configuration parameters. Invoked by the
-	 * simulation engine.
+	 * Standard constructor that reads the configuration parameters. Invoked by
+	 * the simulation engine.
 	 * 
-	 * @param prefix the configuration prefix for this class.
+	 * @param prefix
+	 *            the configuration prefix for this class.
 	 */
 	public ProbDependencyInitializer(String prefix) {
 		protocolID = Configuration.getPid(prefix + "." + PAR_PROT);
@@ -87,26 +88,12 @@ public class ProbDependencyInitializer implements Control {
 				double val = CommonState.r.nextDouble();
 				if (val <= prob) {
 					comp.setDependencyType(t);
-					dep_num++;					
-					if(t==comp.getType()) {
-						System.err.println("Cannot set recursive dependencies");
-						System.exit(0);
-					}					
+					dep_num++;
 				}
 			}
 			
 			comp.setDep_num(dep_num);
 		}
-
-//		// 0-1-2-3-4-5-6-7-8-9
-//		for (int i = 0; i < Network.size(); ++i) {
-//			comp = (OverloadComponentAssembly) Network.get(i).getProtocol(protocolID);
-//			if(comp.getType()!=9) {
-//				comp.setDependencyType(comp.getType() + 1);
-//				comp.setDep_num(1);
-//			}
-//			
-//		}
 
 		return false;
 	}

@@ -24,9 +24,6 @@ public class OverloadNewNodeInitializer implements NodeInitializer {
 	@Override
 	public void initialize(Node n) {
 		
-		System.out.println("CHECK INITIALIZED: OverloadNewNodeInitializer");
-		System.exit(0);
-		
 		// new peer
 		OverloadComponentAssembly comp = (OverloadComponentAssembly)n.getProtocol(component_assembly_pid);
 		comp.setId((int) n.getID());

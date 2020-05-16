@@ -51,21 +51,12 @@ public class OverloadFileInitializer implements Control {
 		// the first experiment initializes the final data structure
 		if(experiment_number==1) {
 
-			// Quality
-			FinalUtilityObserver.quality = new ArrayList<>();
-			FinalUtilityObserver.quality_jain = new ArrayList<>();
-			// Energy
-			FinalUtilityObserver.energy = new ArrayList<>();
-			FinalUtilityObserver.energy_jain = new ArrayList<>();
+			FinalUtilityObserver.finalUtils = new ArrayList<>();
+			FinalUtilityObserver.finalUtils_jain = new ArrayList<>();
 
-
-			for(int i=0;i<((cycles/comp_step));i++) {
-				// Quality
-				FinalUtilityObserver.quality.add(new IncrementalStats());
-				FinalUtilityObserver.quality_jain.add(new IncrementalStats());
-				// Energy
-				FinalUtilityObserver.energy.add(new IncrementalStats());
-				FinalUtilityObserver.energy_jain.add(new IncrementalStats());
+			for(int i=0;i<((cycles/comp_step));i++) {			
+				FinalUtilityObserver.finalUtils.add(new IncrementalStats());
+				FinalUtilityObserver.finalUtils_jain.add(new IncrementalStats());
 			}
 		}
 		
